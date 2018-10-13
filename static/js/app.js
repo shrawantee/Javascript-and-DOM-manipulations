@@ -1,36 +1,81 @@
-// Get references to the tbody element, input field and button
+// // Get references to the tbody element, input field and button
+
 var $tbody = document.querySelector("tbody");
 var $dateInput = document.querySelector("#datetime");
+var $stateInput = document.querySelector("#state");
 var $searchBtn = document.querySelector("#search");
+var $cityInput = document.querySelector("#city");
+var $countryInput = document.querySelector("#country");
+var $shapeInput = document.querySelector("#shape");
 
-// Set filteredUFO to addressData initially
-var filteredUFO = data;
+$searchBtn.addEventListener("click", handleSearchButtonClick);
 
-// renderTable renders the filteredUFO to the tbody
+var filteredTable = data;
+
 function renderTable() {
   $tbody.innerHTML = "";
-  console.log("render is happening")
+  for (var i = 0; i < filteredTable.length; i++) {
+    var address = filteredTable[i];
+    console.log(address)
+    var fields = Object.keys(address);
 
-  for (var i = 0; i < filteredUFO.length; i++) {
-    
-    // Get get the current sighting object and its fields
-    var sighting = filteredUFO[i];
-    var fields = Object.keys(sighting);
-    // Create a new row in the tbody, set the index to be i + startingIndex
     var $row = $tbody.insertRow(i);
     for (var j = 0; j < fields.length; j++) {
-      // For every field in the address object, create a new cell at set its inner text to be the current value at the current address's field
       var field = fields[j];
       var $cell = $row.insertCell(j);
-      $cell.innerText = sighting[field];
+      $cell.innerText = address[field];
     }
   }
 }
-
 // Add an event listener to the searchButton, call handleSearchButtonClick when clicked
-//  $searchBtn.addEventListener("click", handleSearchButtonClick);
+function handleSearchButtonClick() {
+  var filterDate = $dateInput.value;
+  var filterState = $stateInput.value.trim().toLowerCase();
+  var filterCity = $cityInput.value.trim().toLowerCase();
+  var filterCountry = $countryInput.value.trim().toLowerCase();
+  var filterShape = $shapeInput.value.trim().toLowerCase();
 
-// Define the handleSearchButtonClick function here
+  if (filterDate != ""){
+    filteredTable = data.filter(function(address) {
+      var addressDate = address.datetime; 
+    return addressDate === filterDate;
+    });
+  }
+  else {filteredTable};
+  
+  if(filterState != ""){
+    filteredTable = filteredTable.filter(function(address){
+      var addressState = address.state;
+      return addressState === filterState;
+    });
+  }
+  else{filteredTable};
 
+  if(filterCity != ""){
+    filteredTable = filteredTable.filter(function(address){
+      var addressCity = address.city;
+      return addressCity === filterCity;
+    });
+  }
+  else{filteredTable};
+
+  if(filterCountry != ""){
+    filteredTable = filteredTable.filter(function(address){
+      var addressCountry = address.country;
+      return addressCountry === filterCountry;
+    });
+  }
+  else{filteredTable};
+
+  if(filterShape != "") {
+    filteredTable = filteredTable.filter(function(address){
+      var addressShape = address.shape;
+      return addressShape === filterShape;
+    });
+  }
+  else{filteredTable};
+
+renderTable();
+}
 // Render the table for the first time on page load
 renderTable();
